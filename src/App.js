@@ -1,56 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const App = () => {
-  const [data, setData] = useState([]);
-  const [searchData, setSearchData] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
+const Hi = () => {
+  const [record, setRecord] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
   useEffect(() => {
-    axios.get('https://jsonplaceholder.typicode.com/todos/1')
+    axios.get('https://jsonplaceholder.typicode.com/posts')
       .then(response => {
-        setData(response.data);
-        setFilteredData(response.data);
-        console.log(typeof response.data);
+        setRecord(response.data);
+        setFilteredPosts(response.data);
       })
       .catch(error => {
         console.error(error);
       });
   }, []);
-  
 
   useEffect(() => {
-    const filtered = data.filter(post => post.title.toLowerCase().includes(searchData.toLowerCase()));
-    setFilteredData(filtered);
-  }, [searchData, data]);
+    const filtered = record.filter(post => post.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    setFilteredPosts(filtered);
+  }, [searchTerm, record]);
 
   const handleSearch = (event) => {
-    setSearchData(event.target.value);
+    setSearchTerm(event.target.value);
   };
 
   const handleSort = () => {
-    const sorted = [...filteredData].sort((a, b) => a.title.localeCompare(b.title));
-    setFilteredData(sorted);
+    const sorted = [...filteredPosts].sort((a, b) => a.title.localeCompare(b.title));
+    setFilteredPosts(sorted);
   };
 
   return (
     <div>
-      <input type="text" placeholder="Search" value={searchData} onChange={handleSearch} />
+      <input type="text" placeholder="Search" value={searchTerm} onChange={handleSearch} />
       <button onClick={handleSort}>Sort by Title</button>
 
-      {filteredData.length > 0 ? (
-        filteredData.map((post) => (
-          <div key={post.id}>
-            <h3>{post.title}</h3>
-            <p>{post.body}</p>
-          </div>
-        ))
-      ) : (
-        <p>No Data found.</p>
-      )}
-
+      {filteredPosts.map(post => (
+        <div key={post.id}>
+          <h3>{post.title}</h3>
+          <p>{post.body}</p>
+        </div>
+      ))}
     </div>
   );
 };
 
-export default App;
+export default Hi;
